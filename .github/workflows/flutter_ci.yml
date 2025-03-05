@@ -55,11 +55,11 @@ jobs:
       - name: Build APK
         run: flutter build apk --debug
       
-      - name: Upload APK
-        uses: actions/upload-artifact@v3
-        with:
-          name: debug-apk
-          path: readily_reads/build/app/outputs/flutter-apk/app-debug.apk
+    #   - name: Upload APK
+    #     uses: actions/upload-artifact@v3
+    #     with:
+    #       name: debug-apk
+    #       path: readily_reads/build/app/outputs/flutter-apk/app-debug.apk
 
   build_ios:
     name: Build iOS
