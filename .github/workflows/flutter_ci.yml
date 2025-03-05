@@ -1,0 +1,113 @@
+name: Readily Reads CI/CD
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  workflow_dispatch:  # Allow manual triggering
+
+jobs:
+  flutter_test:
+    name: Flutter Test and Analyze
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./readily_reads
+    steps:
+      - uses: actions/checkout@v3
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.13.0'
+          channel: 'stable'
+      
+      - name: Install Dependencies
+        run: flutter pub get
+      
+      - name: Verify Formatting
+        run: flutter format --set-exit-if-changed .
+      
+      - name: Analyze Project Source
+        run: flutter analyze
+      
+      - name: Run Tests
+        run: flutter test
+
+  build_android:
+    name: Build Android APK
+    needs: flutter_test
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./readily_reads
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+      
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.13.0'
+          channel: 'stable'
+      
+      - name: Install Dependencies
+        run: flutter pub get
+      
+      - name: Build APK
+        run: flutter build apk --debug
+      
+      - name: Upload APK
+        uses: actions/upload-artifact@v3
+        with:
+          name: debug-apk
+          path: readily_reads/build/app/outputs/flutter-apk/app-debug.apk
+
+  build_ios:
+    name: Build iOS
+    needs: flutter_test
+    runs-on: macos-latest
+    defaults:
+      run:
+        working-directory: ./readily_reads
+    steps:
+      - uses: actions/checkout@v3
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.13.0'
+          channel: 'stable'
+      
+      - name: Install Dependencies
+        run: |
+          flutter pub get
+          cd ios && pod install
+      
+      - name: Build iOS
+        run: flutter build ios --debug --no-codesign
+      
+      # We don't upload the iOS build artifact as it requires code signing
+      # In a production setup, you would add code signing steps here
+
+  # Uncomment and customize this job when you're ready to deploy to Firebase App Distribution
+  # deploy_to_firebase:
+  #   name: Deploy to Firebase App Distribution
+  #   needs: [build_android]
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - name: Download APK
+  #       uses: actions/download-artifact@v3
+  #       with:
+  #         name: debug-apk
+  #     
+  #     - name: Upload to Firebase App Distribution
+  #       uses: wzieba/Firebase-Distribution-Github-Action@v1
+  #       with:
+  #         appId: ${{ secrets.FIREBASE_APP_ID }}
+  #         serviceCredentialsFileContent: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
+  #         groups: testers
+  #         file: app-debug.apk
+  #         releaseNotes: |
+  #           Changes in this build:
+  #           - ${{ github.event.head_commit.message }}
