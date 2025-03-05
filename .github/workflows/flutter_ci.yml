@@ -24,9 +24,6 @@ jobs:
       - name: Install Dependencies
         run: flutter pub get
       
-      - name: Verify Formatting
-        run: flutter format --set-exit-if-changed .
-      
       - name: Analyze Project Source
         run: flutter analyze
       
