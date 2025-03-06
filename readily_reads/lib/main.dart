@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'add_book_page.dart';
 
 void main() {
   runApp(const ReadilyReads());
@@ -49,7 +50,7 @@ class HomePage extends StatelessWidget {
             ),
             SizedBox(height: 16),
             Text(
-              'Your personal reading companion',
+              'Your personal reading habit tracker',
               style: TextStyle(
                 fontSize: 16,
               ),
@@ -57,13 +58,58 @@ class HomePage extends StatelessWidget {
           ],
         ),
       ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            const DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.blue,
+              ),
+              child: Text('Readily Reads'),
+            ),
+            ListTile(
+              title: const Text('Books'),
+              onTap: () {
+                // Navigate to books page
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Books page coming soon!'),
+                  ),
+                );
+              },
+            ),
+            ListTile(
+              title: const Text('Authors'),
+              onTap: () {
+                // Navigate to authors page
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Authors page coming soon!'),
+                  ),
+                );
+              },
+            ),
+            ListTile(
+              title: const Text('Genres'),
+              onTap: () {
+                // Navigate to genres page
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Genres page coming soon!'),
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           // Add new book action
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Add a new book feature coming soon!'),
-            ),
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const AddBookPage()),
           );
         },
         tooltip: 'Add Book',
