@@ -14,8 +14,20 @@ void main() {
     // Interact with the widget and trigger a frame.
     await tester.tap(find.byIcon(Icons.add));
     await tester.pump();
+  });
 
-    // Verify that the interaction has the expected result.
-    expect(find.text('Add a new book feature coming soon!'), findsOneWidget);
+  testWidgets('Open add book page', (WidgetTester tester) async {
+    // Build our app and trigger a frame.
+    await tester.pumpWidget(const ReadilyReads());
+
+    // Verify that the add button is present.
+    expect(find.byIcon(Icons.add), findsOneWidget);
+
+    // Tap the add button and trigger a frame.
+    await tester.tap(find.byIcon(Icons.add));
+    await tester.pumpAndSettle();
+
+    // Verify that the add book page is opened.
+    expect(find.text('Add Book'), findsOneWidget);
   });
 }
