@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'add_book_page.dart';
+import 'splash_screen.dart'; // Import the new splash screen file
 
 void main() {
   runApp(const ReadilyReads());
@@ -16,7 +17,8 @@ class ReadilyReads extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      home: const HomePage(),
+      home:
+          const SplashScreen(), // Start with the splash screen instead of login page
     );
   }
 }
