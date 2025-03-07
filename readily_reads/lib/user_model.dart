@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -119,7 +120,9 @@ class LoginService {
       await _dbHelper.insertUser(newUser);
       return true;
     } catch (e) {
-      print('Error registering user: $e');
+      if (kDebugMode) {
+        print('Error registering user: $e');
+      }
       return false;
     }
   }
