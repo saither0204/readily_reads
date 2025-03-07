@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
-import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:readily_reads/book_model.dart';
 
 // User model class
 class User {
@@ -44,91 +44,81 @@ class DatabaseHelper {
   factory DatabaseHelper() => _instance;
   DatabaseHelper._internal();
 
-  static Database? _database;
+  // Using the BookDatabaseHelper to ensure we're working with the same database
+  final BookDatabaseHelper _bookDbHelper = BookDatabaseHelper();
 
-  // Get database instance, creating it if it doesn't exist
+  // Get database instance, which is now managed by BookDatabaseHelper
   Future<Database> get database async {
-    if (_database != null) return _database!;
-    _database = await _initDatabase();
-    return _database!;
-  }
-
-  // Initialize the database
-  Future<Database> _initDatabase() async {
-    String path = join(await getDatabasesPath(), 'login_database.db');
-    return await openDatabase(
-      path,
-      version: 1,
-      onCreate: _createDb,
-    );
-  }
-
-  // Create tables in the database
-  Future<void> _createDb(Database db, int version) async {
-    await db.execute('''
-      CREATE TABLE users(
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        username TEXT UNIQUE,
-        password TEXT
-      )
-    ''');
+    return await _bookDbHelper.database;
   }
 
   // Insert a user into the database
   Future<int> insertUser(User user) async {
-    final Database db = await database;
-    return await db.insert(
-      'users',
-      user.toMap(),
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
+    try {
+      final Database db = await database;
+      if (kDebugMode) {
+        print('Inserting user: ${user.username}');
+      }
+      return await db.insert(
+        'users',
+        user.toMap(),
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error inserting user: $e');
+      }
+      rethrow;
+    }
   }
 
   // Get a user by username
   Future<User?> getUserByUsername(String username) async {
-    final Database db = await database;
-    List<Map<String, dynamic>> maps = await db.query(
-      'users',
-      where: 'username = ?',
-      whereArgs: [username],
-    );
+    try {
+      final Database db = await database;
+      List<Map<String, dynamic>> maps = await db.query(
+        'users',
+        where: 'username = ?',
+        whereArgs: [username],
+      );
 
-    if (maps.isNotEmpty) {
-      return User.fromMap(maps.first);
+      if (maps.isNotEmpty) {
+        if (kDebugMode) {
+          print('Found user: $username');
+        }
+        return User.fromMap(maps.first);
+      }
+      if (kDebugMode) {
+        print('No user found with username: $username');
+      }
+      return null;
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error getting user by username: $e');
+      }
+      rethrow;
     }
-    return null;
   }
 
   // Authenticate a user
   Future<bool> authenticateUser(String username, String password) async {
-    User? user = await getUserByUsername(username);
-    if (user != null && user.password == password) {
-      return true;
-    }
-    return false;
-  }
-}
-
-// Example usage in a login page
-class LoginService {
-  final DatabaseHelper _dbHelper = DatabaseHelper();
-
-  // Register a new user
-  Future<bool> registerUser(String username, String password) async {
     try {
-      User newUser = User(username: username, password: password);
-      await _dbHelper.insertUser(newUser);
-      return true;
+      User? user = await getUserByUsername(username);
+      if (user != null && user.password == password) {
+        if (kDebugMode) {
+          print('User authenticated: $username');
+        }
+        return true;
+      }
+      if (kDebugMode) {
+        print('Authentication failed for user: $username');
+      }
+      return false;
     } catch (e) {
       if (kDebugMode) {
-        print('Error registering user: $e');
+        print('Error authenticating user: $e');
       }
       return false;
     }
-  }
-
-  // Login a user
-  Future<bool> loginUser(String username, String password) async {
-    return await _dbHelper.authenticateUser(username, password);
   }
 }

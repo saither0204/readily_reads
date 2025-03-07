@@ -1,25 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:readily_reads/book_model.dart';
-import 'package:readily_reads/user_session.dart';
 
-class AddBookPage extends StatefulWidget {
-  const AddBookPage({super.key});
+class EditBookPage extends StatefulWidget {
+  final Book book;
+
+  const EditBookPage({
+    Key? key,
+    required this.book,
+  }) : super(key: key);
 
   @override
-  _AddBookPageState createState() => _AddBookPageState();
+  _EditBookPageState createState() => _EditBookPageState();
 }
 
-class _AddBookPageState extends State<AddBookPage> {
+class _EditBookPageState extends State<EditBookPage> {
   final TextEditingController titleController = TextEditingController();
   final TextEditingController authorController = TextEditingController();
   final TextEditingController genreController = TextEditingController();
   final TextEditingController pagesController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
 
-  bool showForm = false;
   DateTime? publicationDate;
   bool isCurrentlyReading = false;
   bool _isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Initialize controllers with book data
+    titleController.text = widget.book.title;
+    authorController.text = widget.book.author;
+    genreController.text = widget.book.genre;
+    pagesController.text = widget.book.pages?.toString() ?? '';
+    descriptionController.text = widget.book.description ?? '';
+    publicationDate = widget.book.publicationDate;
+    isCurrentlyReading = widget.book.isCurrentlyReading;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +45,7 @@ class _AddBookPageState extends State<AddBookPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Add Book',
+          'Edit Book',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
@@ -48,103 +65,7 @@ class _AddBookPageState extends State<AddBookPage> {
             stops: const [0.0, 0.2],
           ),
         ),
-        child: showForm ? _buildBookForm(context) : _buildInitialView(context),
-      ),
-    );
-  }
-
-  Widget _buildInitialView(BuildContext context) {
-    final ColorScheme colorScheme = Theme.of(context).colorScheme;
-
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: Card(
-          elevation: 4,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          child: InkWell(
-            onTap: () {
-              setState(() {
-                showForm = true;
-              });
-            },
-            borderRadius: BorderRadius.circular(16),
-            child: Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(32.0),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(16),
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    colorScheme.surface,
-                    colorScheme.tertiaryContainer.withOpacity(0.3),
-                  ],
-                ),
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      color: colorScheme.primary.withOpacity(0.1),
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      Icons.add_circle_outline,
-                      size: 80,
-                      color: colorScheme.primary,
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-                  Text(
-                    'Add a new book to your library',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: colorScheme.primary,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    'Tap to start tracking your next great read',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: colorScheme.onSurface.withOpacity(0.7),
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 24),
-                  FilledButton.icon(
-                    onPressed: () {
-                      setState(() {
-                        showForm = true;
-                      });
-                    },
-                    icon: const Icon(Icons.add),
-                    label: const Text('Add Book'),
-                    style: FilledButton.styleFrom(
-                      backgroundColor: colorScheme.primary,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 24,
-                        vertical: 12,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
+        child: _buildBookForm(context),
       ),
     );
   }
@@ -166,7 +87,7 @@ class _AddBookPageState extends State<AddBookPage> {
             children: [
               // Form title
               Text(
-                'Book Details',
+                'Edit Book Details',
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -200,7 +121,7 @@ class _AddBookPageState extends State<AddBookPage> {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        'Add Cover Image',
+                        'Change Cover Image',
                         style: TextStyle(
                           color: colorScheme.primary.withOpacity(0.8),
                           fontWeight: FontWeight.w500,
@@ -306,7 +227,7 @@ class _AddBookPageState extends State<AddBookPage> {
                 onTap: () async {
                   final DateTime? picked = await showDatePicker(
                     context: context,
-                    initialDate: DateTime.now(),
+                    initialDate: publicationDate ?? DateTime.now(),
                     firstDate: DateTime(1900),
                     lastDate: DateTime.now(),
                     builder: (context, child) {
@@ -421,9 +342,7 @@ class _AddBookPageState extends State<AddBookPage> {
                   Expanded(
                     child: OutlinedButton.icon(
                       onPressed: () {
-                        setState(() {
-                          showForm = false;
-                        });
+                        Navigator.pop(context);
                       },
                       icon: const Icon(Icons.cancel),
                       label: const Text('Cancel'),
@@ -439,9 +358,9 @@ class _AddBookPageState extends State<AddBookPage> {
                   const SizedBox(width: 16),
                   Expanded(
                     child: FilledButton.icon(
-                      onPressed: _isLoading ? null : _saveBook,
+                      onPressed: _isLoading ? null : _updateBook,
                       icon: _isLoading
-                          ? SizedBox(
+                          ? const SizedBox(
                               height: 20,
                               width: 20,
                               child: CircularProgressIndicator(
@@ -450,7 +369,7 @@ class _AddBookPageState extends State<AddBookPage> {
                               ),
                             )
                           : const Icon(Icons.check),
-                      label: Text(_isLoading ? 'Saving...' : 'Save'),
+                      label: Text(_isLoading ? 'Saving...' : 'Save Changes'),
                       style: FilledButton.styleFrom(
                         backgroundColor: colorScheme.primary,
                         foregroundColor: Colors.white,
@@ -470,7 +389,7 @@ class _AddBookPageState extends State<AddBookPage> {
     );
   }
 
-  Future<void> _saveBook() async {
+  Future<void> _updateBook() async {
     final String title = titleController.text.trim();
     final String author = authorController.text.trim();
     final String genre = genreController.text.trim();
@@ -494,16 +413,9 @@ class _AddBookPageState extends State<AddBookPage> {
     });
 
     try {
-      // Get current user ID from session
-      int? currentUserId = await UserSession.getCurrentUserId();
-
-      if (currentUserId == null) {
-        _showErrorSnackBar('User session not found. Please log in again.');
-        return;
-      }
-
-      // Create book object
-      final book = Book(
+      // Create updated book object
+      final updatedBook = Book(
+        id: widget.book.id,
         title: title,
         author: author,
         genre: genre,
@@ -515,17 +427,17 @@ class _AddBookPageState extends State<AddBookPage> {
             : null,
         publicationDate: publicationDate,
         isCurrentlyReading: isCurrentlyReading,
-        userId: currentUserId,
+        userId: widget.book.userId,
       );
 
       // Save book to database
       final BookService bookService = BookService();
-      final success = await bookService.addBook(book);
+      final success = await bookService.updateBook(updatedBook);
 
       if (success) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: const Text('Book added successfully!'),
+            content: const Text('Book updated successfully!'),
             backgroundColor: Colors.green,
             behavior: SnackBarBehavior.floating,
             shape: RoundedRectangleBorder(
@@ -534,10 +446,10 @@ class _AddBookPageState extends State<AddBookPage> {
           ),
         );
 
-        // Return true to indicate that a book was added (for refreshing the list)
-        Navigator.pop(context, true);
+        // Return the updated book to the previous screen
+        Navigator.pop(context, updatedBook);
       } else {
-        _showErrorSnackBar('Failed to add book. Please try again.');
+        _showErrorSnackBar('Failed to update book. Please try again.');
       }
     } catch (e) {
       _showErrorSnackBar('An error occurred: $e');
