@@ -1,8 +1,8 @@
-# [Your Mobile App Name]
+# Readily Reads
 
 ## Overview
 
-[Provide a brief description of your mobile application, its purpose, and the problem it solves]
+Book reading tracking app that allows users to keep track of their reading progress, set reading goals, and discover new books. The app will have a user-friendly interface and will be available on both Android and iOS platforms. The app will also have a backend server to store user data and book information. The app will be built using the Flutter framework and Dart programming language. The backend server will be built using [Backend Technology](Working on it) and will provide RESTful APIs for the mobile app.
 
 ## Table of Contents
 
@@ -16,10 +16,30 @@
 
 ## Features
 
-- [Feature 1]
-- [Feature 2]
-- [Feature 3]
-- [Add more as needed]
+- **User Authentication**: Users can sign up and log in to the app.
+- **Reading Progress**: Users can track their reading progress for each book.
+- **Reading Goals**: Users can set reading goals and track their progress.
+- **Book Discovery**: Users can discover new books based on their interests.
+- **Book Details**: Users can view details of each book, including the author, genre, and summary.
+- **Book Search**: Users can search for books by title, author, or genre.
+- **Book Recommendations**: Users can receive book recommendations based on their reading history.
+- **Social Sharing**: Users can share their reading progress and book recommendations with friends.
+- **Offline Support**: App works offline and syncs data when the device is online.
+- **Dark Mode**: App supports dark mode for better reading experience at night.
+- **Push Notifications**: Users receive notifications for reading goals and book recommendations.
+- **Data Backup**: User data is backed up securely on the server.
+- **Privacy**: User data is kept private and secure.
+- **Feedback**: Users can provide feedback and report issues within the app.
+- **Settings**: Users can customize app settings such as theme, notifications, and account details.
+- **Accessibility**: App is accessible to users with disabilities.
+- **Localization**: App supports multiple languages for a global audience.
+- **Cross-Platform**: App is available on both Android and iOS platforms.
+- **Scalable**: App is designed to handle a large number of users and books.
+- **Secure**: App follows best practices for security and data protection.
+- **Performance**: App is optimized for speed and performance.
+- **Responsive**: App works well on different screen sizes and orientations.
+- **Easy to Use**: App has an intuitive and user-friendly interface.
+- **Customizable**: Users can customize the app to suit their preferences.
 
 ## Technology Stack
 
@@ -82,11 +102,9 @@ flutter run
 
 ## License
 
-This project is licensed under the [License Name] - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT - see the [LICENSE](LICENSE) file for details.
 
 ## Contact
 
-- **Developer**: [Your Name]
-- **Email**: [Your Email]
-- **GitHub**: [Your GitHub Profile]
-- **Project Link**: [GitHub Repository URL]
+- **Developer**: Sarthak Shah
+- **Email**: <shahsart0204@gmail.com>
