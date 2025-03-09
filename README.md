@@ -43,13 +43,22 @@ Book reading tracking app that allows users to keep track of their reading progr
 
 ## Technology Stack
 
-- **Framework**: Flutter
-- **Language**: Dart
-- **State Management**: [e.g., Provider, Bloc, Riverpod, GetX]
-- **Backend/API**: [e.g., Firebase, Custom API, Supabase]
-- **Database**: [e.g., Cloud Firestore, SQLite, Hive]
-- **Authentication**: [e.g., Firebase Auth, Custom Auth]
-- **Other Tools & Libraries**: [List key packages and tools]
+**Framework**: Flutter  
+**Language**: Dart  
+**State Management**: StatefulWidget (standard Flutter state management)  
+
+**Local Storage**:
+
+- SQLite (via sqflite package)
+- Shared Preferences (for user sessions)
+
+**Authentication**: Custom local authentication  
+
+**Other Tools & Libraries**:
+
+- path_provider: File system paths
+- shared_preferences: Key-value storage
+- sqflite: SQLite database
 
 ## Documentation
 
