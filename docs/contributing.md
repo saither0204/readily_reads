@@ -1,6 +1,6 @@
-# Contributing to [Your Mobile App Name]
+# Contributing to Readily Reads
 
-Thank you for considering contributing to [Your Mobile App Name]! This document outlines the process for contributing to this Flutter/Dart mobile application.
+Thank you for considering contributing to Readily Reads! This document outlines the process for contributing to this Flutter/Dart mobile application.
 
 ## Table of Contents
 
@@ -13,11 +13,10 @@ Thank you for considering contributing to [Your Mobile App Name]! This document 
 - [Testing Guidelines](#testing-guidelines)
 - [Documentation Guidelines](#documentation-guidelines)
 - [Issue Reporting Guidelines](#issue-reporting-guidelines)
-- [Community](#community)
 
 ## Code of Conduct
 
-This project adheres to a Code of Conduct that all contributors are expected to follow. By participating, you agree to uphold this code. Please report unacceptable behavior to [your email].
+This project adheres to a Code of Conduct that all contributors are expected to follow. By participating, you agree to uphold this code. Please be respectful and considerate of others.
 
 ## Getting Started
 
@@ -28,8 +27,8 @@ Before you begin, ensure you have set up the project by following the [Getting S
 ### Finding Issues to Work On
 
 - Look for issues labeled with `good first issue` for newcomers
-- Check the [GitHub issues](https://github.com/[your-username]/[project-name]/issues) for existing bugs and feature requests
-- Feel free to ask for clarification on any issue before working on it
+- Check the GitHub issues for existing bugs and feature requests
+- Feel free to suggest new features or improvements
 
 ## Development Workflow
 
@@ -39,14 +38,14 @@ Before you begin, ensure you have set up the project by following the [Getting S
 2. Clone your fork locally:
 
    ```bash
-   git clone https://github.com/[your-username]/[project-name].git
-   cd [project-name]
+   git clone https://github.com/[your-username]/readily_reads.git
+   cd readily_reads
    ```
 
 3. Add the original repository as an upstream remote:
 
    ```bash
-   git remote add upstream https://github.com/[original-owner]/[project-name].git
+   git remote add upstream https://github.com/[original-owner]/readily_reads.git
    ```
 
 ### 2. Create a Branch
@@ -75,16 +74,10 @@ Use a descriptive name for your branch that reflects the changes you're making.
    flutter pub get
    ```
 
-3. Run any code generators if the project uses them:
-
-   ```bash
-   flutter pub run build_runner build
-   ```
-
 ### 4. Make Your Changes
 
 - Follow the [Dart and Flutter Coding Standards](#dart-and-flutter-coding-standards) outlined below
-- Write tests for your changes when applicable
+- Maintain consistency with the existing code style
 - Update documentation if necessary
 - Run linters and formatters before committing:
 
@@ -125,8 +118,7 @@ Ensure your PR meets these requirements:
 - The code builds without errors
 - All tests pass (`flutter test`)
 - Code has been analyzed (`flutter analyze`)
-- New code has appropriate test coverage
-- Documentation is updated
+- Documentation is updated if necessary
 - Code follows project style guidelines
 - Commit messages follow guidelines
 
@@ -145,7 +137,7 @@ Ensure your PR meets these requirements:
 - Follow Dart best practices and conventions
 - Keep functions and methods small and focused
 - Use meaningful variable and function names
-- Add comments only where necessary to explain complex logic
+- Add comments when necessary to explain complex logic
 
 ### Dart Style Guide
 
@@ -159,26 +151,33 @@ Ensure your PR meets these requirements:
 
 - Extract reusable widgets to separate classes
 - Keep widget trees clean and manageable
-- Follow the recommended Flutter architecture pattern ([Provider](https://pub.dev/packages/provider), [Bloc](https://pub.dev/packages/bloc), etc.)
-- Use `const` constructors when possible to improve performance
-- Follow accessibility guidelines
+- Use `const` constructors when possible for better performance
+- Follow the existing app architecture pattern
+- Follow Material Design guidelines for UI consistency
 
 ### Code Organization
 
-- Structure files logically in directories:
+Readily Reads follows a file-per-screen organization pattern:
 
-  ```plaintext
-  lib/
-  ├── api/          # API related code
-  ├── models/       # Data models
-  ├── providers/    # State management
-  ├── screens/      # UI screens
-  ├── utils/        # Utilities
-  └── widgets/      # Reusable widgets
-  ```
+```plaintext
+lib/
+├── main.dart                  # App entry point
+├── splash_screen.dart         # Splash screen
+├── login_page.dart            # Login and registration
+├── book_list_page.dart        # Book listing
+├── book_management_page.dart  # Advanced book management
+├── add_book_page.dart         # Add book form
+├── edit_book_page.dart        # Edit book form
+├── currently_reading_page.dart # Currently reading books
+├── book_model.dart            # Book data model and database
+├── user_model.dart            # User data model
+└── user_session.dart          # Session management
+```
 
-- Keep related functionality together
-- Follow consistent naming patterns for files and directories
+When adding new features:
+- Consider creating new Dart files for major screens
+- Place utility functions in appropriate files
+- Maintain the existing organizational pattern
 
 ## Commit Message Guidelines
 
@@ -205,8 +204,8 @@ Types include:
 Examples:
 
 ```plaintext
-feat(auth): add biometric authentication
-fix(ui): resolve overflow in profile screen
+feat(books): add book rating feature
+fix(ui): resolve overflow in book list page
 docs: update installation instructions
 ```
 
@@ -254,10 +253,11 @@ flutter test --coverage
 - Add dartdoc comments to public APIs:
 
   ```dart
-  /// Returns the user's profile information.
+  /// Returns all books for the specified user.
   /// 
-  /// Throws a [NetworkException] if the network request fails.
-  Future<UserProfile> getUserProfile() async {
+  /// Takes a [userId] parameter to filter books by user.
+  /// Throws a [DatabaseException] if the database operation fails.
+  Future<List<Book>> getAllBooks(int userId) async {
     // Implementation
   }
   ```
@@ -290,10 +290,4 @@ For feature suggestions:
 3. Provide examples of how the feature would work
 4. Consider including mockups if it's a visual feature
 
-## Community
-
-- Join our [Discord/Slack/etc.] community: [link]
-- Follow us on [Twitter/etc.]: [link]
-- Subscribe to our newsletter: [link]
-
-Thank you for contributing to [Your Mobile App Name]!
+Thank you for contributing to Readily Reads!
