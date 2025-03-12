@@ -1,6 +1,6 @@
-# Deployment Guide for [Your Mobile App Name]
+# Deployment Guide for Readily Reads
 
-This guide provides instructions for deploying [Your Mobile App Name] to app stores and backend services (if applicable).
+This guide provides instructions for deploying Readily Reads to app stores.
 
 ## Table of Contents
 
@@ -9,8 +9,6 @@ This guide provides instructions for deploying [Your Mobile App Name] to app sto
 - [Mobile App Deployment](#mobile-app-deployment)
   - [Android Deployment](#android-deployment)
   - [iOS Deployment](#ios-deployment)
-- [Backend Deployment](#backend-deployment) (if applicable)
-- [Continuous Integration/Deployment](#continuous-integrationdeployment)
 - [App Store Optimization](#app-store-optimization)
 - [Post-Deployment Verification](#post-deployment-verification)
 - [Versioning and Updates](#versioning-and-updates)
@@ -25,8 +23,6 @@ Before deploying, ensure you have:
 - Properly configured app signing keys and certificates
 - All app store assets (screenshots, descriptions, etc.)
 - Required legal documentation (privacy policy, terms of service)
-- Backend hosting account (if applicable)
-- CI/CD platform access (if using)
 
 ## Environment Configuration
 
@@ -34,23 +30,21 @@ Before deploying, ensure you have:
 
 Ensure your app is configured for production:
 
-1. Update API endpoints to production URLs
-2. Disable debug features and logging
-3. Update environment variables for production
+1. Disable debug features and logging
+2. Update environment configuration
+3. Ensure database setup is properly configured
 
-### Configuring Environment Variables
+### Configuration Settings
 
-For a Flutter app using environment variables:
+Readily Reads uses SQLite for local storage and manages configuration through Flutter build settings:
 
-1. Create a `.env.prod` file:
+1. Update app version and build number in `pubspec.yaml`:
 
-   ```plaintext
-   API_URL=https://api.yourdomain.com
-   SENTRY_DSN=your-sentry-dsn
-   [Other production variables]
+   ```yaml
+   version: 1.0.0+1  # format is version_name+version_code
    ```
 
-2. Ensure your loading mechanism reads from the correct file based on build type
+2. Ensure proper database configuration in `book_model.dart` and `user_model.dart`
 
 ## Mobile App Deployment
 
@@ -66,7 +60,7 @@ For a Flutter app using environment variables:
    keytool -genkey -v -keystore ~/upload-keystore.jks -keyalg RSA -keysize 2048 -validity 10000 -alias upload
    ```
 
-   Create `mobile/android/key.properties`:
+   Create `android/key.properties`:
 
    ```plaintext
    storePassword=<password>
@@ -103,12 +97,15 @@ For a Flutter app using environment variables:
    }
    ```
 
-2. **Update app version**:
+2. **Update app metadata in AndroidManifest.xml**:
 
-   In `pubspec.yaml`:
+   Make sure the application name, icons, and other metadata are correctly set:
 
-   ```yaml
-   version: 1.0.0+1  # version_name+version_code
+   ```xml
+   <application
+       android:label="Readily Reads"
+       android:icon="@mipmap/ic_launcher"
+       ...>
    ```
 
 3. **Build release APK or App Bundle**:
@@ -127,13 +124,18 @@ For a Flutter app using environment variables:
 
 4. **Prepare store listing**:
 
-   - App title and description
+   - App title: "Readily Reads"
+   - Short description: "Your personal reading habit tracker"
+   - Full description: Include details about features (book tracking, reading progress, etc.)
    - Feature graphic (1024 x 500 px)
-   - Promo graphic (180 x 120 px)
    - App icon (512 x 512 px)
-   - Screenshots (various sizes)
+   - Screenshots:
+     - Home screen
+     - Book list
+     - Add book form
+     - Book management screen
+     - Currently reading view
    - Privacy policy URL
-   - Contact information
 
 5. **Upload to Google Play Console**:
 
@@ -141,7 +143,7 @@ For a Flutter app using environment variables:
    - Create a new app or select existing app
    - Complete the store listing
    - Upload the APK or App Bundle
-   - Set up pricing and distribution
+   - Set up pricing and distribution (Readily Reads can be free)
    - Submit for review
 
 #### Play Store Release Types
@@ -169,9 +171,9 @@ For a Flutter app using environment variables:
      - Select Runner target
      - Go to Signing & Capabilities tab
      - Select your team
-     - Set a unique Bundle Identifier
+     - Set a unique Bundle Identifier (e.g., com.yourcompany.readilyreads)
 
-2. **Update app version**:
+2. **Update app version and build number**:
 
    In `pubspec.yaml`:
 
@@ -183,13 +185,19 @@ For a Flutter app using environment variables:
    - CFBundleShortVersionString (1.0.0)
    - CFBundleVersion (1)
 
-3. **Create App Store Connect record**:
+3. **Configure app metadata in Info.plist**:
+
+   Make sure to set:
+   - CFBundleDisplayName (Readily Reads)
+   - Privacy descriptions for any permissions (if needed)
+
+4. **Create App Store Connect record**:
 
    - Go to [App Store Connect](https://appstoreconnect.apple.com/)
    - Create a new app
    - Provide bundle ID, name, etc.
 
-4. **Build archive for iOS**:
+5. **Build archive for iOS**:
 
    ```bash
    flutter build ios --release
@@ -202,18 +210,19 @@ For a Flutter app using environment variables:
    - Select "App Store Connect"
    - Follow the wizard steps
 
-5. **Prepare store listing**:
+6. **Prepare store listing**:
 
-   - App title and description
+   - App title: "Readily Reads"
+   - Subtitle: "Personal Reading Tracker"
+   - Description: Include details about features
    - App icon (1024 x 1024 px)
-   - Screenshots (various sizes)
-   - App preview videos (optional)
-   - Keywords for search
+   - Screenshots for various device sizes
+   - Keywords: reading, books, tracker, library, etc.
    - Support URL
    - Privacy policy URL
-   - Contact information
+   - App category: Books, Productivity, or Lifestyle
 
-6. **Submit for review**:
+7. **Submit for review**:
 
    - In App Store Connect, complete all required information
    - Submit for review
@@ -225,176 +234,41 @@ For a Flutter app using environment variables:
 - **TestFlight External Testing**: For up to 10,000 external testers
 - **App Store**: Full public release
 
-## Backend Deployment (if applicable)
-
-If your app uses a custom backend, follow these steps for deployment:
-
-### Server Preparation
-
-1. Update environment variables for production
-2. Configure database for production use
-3. Set up proper security measures:
-   - Secure HTTPS connections
-   - Proper authentication
-   - Rate limiting
-   - Input validation
-
-### Deployment Options
-
-#### Option 1: Traditional Server Deployment
-
-1. SSH into your server:
-
-   ```bash
-   ssh user@your-server-ip
-   ```
-
-2. Clone repository and install dependencies:
-
-   ```bash
-   git clone [repository URL]
-   cd [project-name]/server
-   npm install --production
-   ```
-
-3. Set up process manager (PM2):
-
-   ```bash
-   npm install -g pm2
-   pm2 start app.js --name "[your-app]-api"
-   pm2 startup
-   pm2 save
-   ```
-
-4. Configure reverse proxy (Nginx):
-
-   ```nginx
-   server {
-       listen 443 ssl;
-       server_name api.yourdomain.com;
-
-       ssl_certificate /path/to/cert.pem;
-       ssl_certificate_key /path/to/key.pem;
-
-       location / {
-           proxy_pass http://localhost:8000;
-           proxy_http_version 1.1;
-           proxy_set_header Upgrade $http_upgrade;
-           proxy_set_header Connection 'upgrade';
-           proxy_set_header Host $host;
-           proxy_cache_bypass $http_upgrade;
-       }
-   }
-   ```
-
-#### Option 2: Cloud Deployment (Heroku, AWS, GCP, etc.)
-
-1. Configure for your cloud provider
-2. Set up environment variables in cloud console
-3. Deploy using provider-specific commands
-
-Example for Heroku:
-
-```bash
-heroku create [your-app]-api
-git subtree push --prefix server heroku main
-```
-
-## Continuous Integration/Deployment
-
-### Setting up CI/CD with GitHub Actions
-
-Create `.github/workflows/deploy.yml`:
-
-```yaml
-name: Deploy
-
-on:
-  push:
-    branches: [ main ]
-    tags: [ 'v*' ]
-
-jobs:
-  build_android:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-java@v2
-        with:
-          distribution: 'zulu'
-          java-version: '11'
-      - uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.0.0'
-          channel: 'stable'
-      - run: flutter pub get
-      - run: flutter analyze
-      - run: flutter test
-      - name: Setup signing
-        run: |
-          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > android/app/upload-keystore.jks
-          echo "storePassword=${{ secrets.KEYSTORE_PASSWORD }}" > android/key.properties
-          echo "keyPassword=${{ secrets.KEY_PASSWORD }}" >> android/key.properties
-          echo "keyAlias=upload" >> android/key.properties
-          echo "storeFile=upload-keystore.jks" >> android/key.properties
-      - name: Build AppBundle
-        run: flutter build appbundle
-      - uses: actions/upload-artifact@v2
-        with:
-          name: app-bundle
-          path: build/app/outputs/bundle/release/app-release.aab
-
-  build_ios:
-    runs-on: macos-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.0.0'
-          channel: 'stable'
-      - run: flutter pub get
-      - run: flutter analyze
-      - run: flutter test
-      - name: Build iOS
-        run: flutter build ios --release --no-codesign
-      # Further steps for iOS signing and deployment
-```
-
 ## App Store Optimization
 
 ### Google Play Store Optimization
 
-- **Title**: Clear, concise app name (max 50 characters)
-- **Description**: Engaging first paragraph, feature list, call to action
-- **Short Description**: Concise value proposition (max 80 characters)
-- **Keywords**: Include in description naturally
-- **Screenshots**: Show key features, add captions
-- **Feature Graphic**: Eye-catching, represents app function
-- **Video**: Create a short demo (30-60 seconds)
-- **Ratings & Reviews**: Encourage satisfied users to rate
+- **Title**: "Readily Reads - Book Tracker"
+- **Description**: Start with a strong first paragraph describing the app's purpose, followed by feature list in bullet points
+- **Short Description**: "Track your reading habits and manage your book collection"
+- **Keywords**: Include terms like "book tracker," "reading habit," "book collection," etc.
+- **Screenshots**: Show key features with descriptive captions
+- **Feature Graphic**: Design a clean graphic showing the app concept
 
 ### Apple App Store Optimization
 
-- **Title**: Clear app name (max 30 characters)
-- **Subtitle**: Brief value proposition (max 30 characters)
-- **Keywords**: Add keywords field (max 100 characters)
-- **Description**: Detailed features and benefits
-- **Screenshots**: Show key features with captions
-- **Preview Video**: Create app previews (15-30 seconds)
-- **Ratings & Reviews**: Implement in-app review requests
+- **Title**: "Readily Reads"
+- **Subtitle**: "Your Personal Book Tracker"
+- **Keywords**: Add relevant keywords separated by commas
+- **Description**: Clear, concise description of the app's purpose and features
+- **Screenshots**: Show key screens with descriptive captions
+- **App Preview Video**: Consider creating a short demo video
 
 ## Post-Deployment Verification
 
 After deployment, verify:
 
 1. App installs and launches successfully
-2. All features work as expected
-3. Authentication flows work properly
-4. API connections function correctly
-5. Push notifications deliver (if applicable)
-6. Analytics are tracking properly
-7. Crash reporting is configured
-8. Performance is acceptable
+2. User registration and login work correctly
+3. Book management features function properly:
+   - Adding new books
+   - Editing existing books
+   - Marking books as currently reading
+   - Deleting books
+4. Filtering and search functionality works
+5. UI displays correctly on different device sizes
+6. Database operations work smoothly
+7. Performance is acceptable
 
 ## Versioning and Updates
 
@@ -415,10 +289,22 @@ When releasing updates:
    - Android build.gradle (if needed)
    - iOS Info.plist (if needed)
 
-2. Create detailed release notes
+2. Create detailed release notes highlighting new features or fixes
 3. Test thoroughly on all supported devices
-4. Implement backward compatibility where possible
+4. Implement database migrations if changing the data model
 5. Consider phased rollouts for major changes
+
+### Feature Planning for Future Versions
+
+Consider these features for future updates:
+
+1. Reading progress tracking (% completion)
+2. Reading goals and statistics
+3. Book recommendations
+4. Barcode scanning for adding books
+5. Cloud synchronization
+6. Social sharing features
+7. Enhanced filtering and categorization
 
 ## Rollback Procedures
 
@@ -434,21 +320,7 @@ If serious issues are found after release:
    - Submit an expedited review with previous version
    - Request removal if critical security issue
 
-### Backend Rollback (if applicable)
-
-1. **Traditional Server**:
-
-   ```bash
-   git checkout [previous-version-tag]
-   npm install
-   pm2 restart [your-app]-api
-   ```
-
-2. **Heroku**:
-
-   ```bash
-   heroku rollback
-   ```
-
-3. **Database**:
-   - Restore from backup if database changes are involved
+3. **Database Considerations**:
+   - Ensure database schema changes are backward compatible
+   - Add version checks in code to handle both old and new schemas
+   - Consider adding database downgrade paths for critical issues
