@@ -345,11 +345,6 @@ class BookDatabaseHelper {
   }
 
   // Helper method to check if a table exists
-  Future<bool> _tableExists(Database db, String tableName) async {
-    var result = await db.rawQuery(
-        "SELECT name FROM sqlite_master WHERE type='table' AND name='$tableName'");
-    return result.isNotEmpty;
-  }
 }
 
 // Service class for book operations
