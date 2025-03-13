@@ -1,17 +1,17 @@
-# Getting Started with [Your Mobile App Name]
+# Getting Started with Readily Reads
 
-This guide will walk you through setting up the [Your Mobile App Name] project for development.
+This guide will walk you through setting up the Readily Reads project for development.
 
 ## Prerequisites
 
 Before you begin, ensure you have the following installed:
 
-- **Flutter SDK** (version: [specify version])
+- **Flutter SDK** (version: 3.0.0 or later)
   - Download from [flutter.dev](https://flutter.dev/docs/get-started/install)
   - Add Flutter to your PATH
   - Verify installation with `flutter doctor`
 
-- **Dart SDK** (version: [specify version])
+- **Dart SDK** (version: 2.17.0 or later)
   - Usually comes with Flutter
   - Verify installation with `dart --version`
 
@@ -31,8 +31,6 @@ Before you begin, ensure you have the following installed:
   - Download from [git-scm.com](https://git-scm.com/)
   - Verify installation with `git --version`
 
-- **[Any other tools or dependencies]**
-
 ## Setting Up the Project
 
 ### 1. Clone the Repository
@@ -42,103 +40,47 @@ Before you begin, ensure you have the following installed:
 git clone [repository URL]
 
 # Navigate to the project directory
-cd [project-directory-name]
+cd readily_reads
 ```
 
 ### 2. Install Dependencies
 
 ```bash
-# Navigate to the Flutter app directory
-cd mobile
-
 # Get Flutter dependencies
 flutter pub get
-
-# If you have a backend
-cd ../server
-npm install  # or yarn install
-cd ..
 ```
 
-### 3. Set Up Environment Variables
+Make sure to add the following packages to your `pubspec.yaml` if they're not already included:
 
-#### Mobile App Environment
+```yaml
+dependencies:
+  flutter:
+    sdk: flutter
+  sqflite: ^2.0.0+4
+  path: ^1.8.0
+  shared_preferences: ^2.0.8
+  # Add other dependencies as needed
+```
 
-1. Create a `.env` file in the `mobile` directory (if using environment variables)
-2. Add the required environment variables:
+### 3. Database Setup
 
-   ```plaintext
-   API_URL=[backend API URL]
-   API_KEY=[API key if required]
-   # Add other app-specific environment variables
-   ```
+The app uses SQLite for local data storage. The database is initialized automatically when the app runs for the first time. The structure is defined in `book_model.dart` and includes:
 
-3. If using `flutter_dotenv` or similar, make sure to update your `pubspec.yaml` to include the `.env` file:
+- `users` table - Stores user authentication information
+- `books` table - Stores book details with foreign key to users
 
-   ```yaml
-   assets:
-     - .env
-   ```
+No additional setup is required for the database since it's handled within the app.
 
-#### Server Environment (if applicable)
-
-1. Navigate to the `server` directory
-2. Create a `.env` file:
-
-   ```bash
-   cp .env.example .env  # If .env.example exists
-   ```
-
-3. Fill in the required environment variables:
-
-   ```plaintext
-   # Server Configuration
-   PORT=[your port number]
-   NODE_ENV=[development/production]
-
-   # Database Configuration
-   DB_URI=[your database connection string]
-
-   # Authentication
-   JWT_SECRET=[your JWT secret]
-   JWT_EXPIRY=[token expiry time]
-
-   # [Any other configuration variables]
-   ```
-
-### 4. Configure Firebase (if applicable)
-
-1. Create a Firebase project at [console.firebase.google.com](https://console.firebase.google.com/)
-2. Add Android and iOS apps to your Firebase project
-3. Download and place the configuration files:
-   - For Android: `google-services.json` in `mobile/android/app/`
-   - For iOS: `GoogleService-Info.plist` in `mobile/ios/Runner/`
-4. Follow Firebase setup instructions for Flutter in the [FlutterFire documentation](https://firebase.flutter.dev/docs/overview)
-
-### 5. Set Up the Database (if applicable)
-
-1. [Instructions for starting your database]
-2. [Instructions for creating a database]
-3. [Instructions for running migrations, if applicable]:
-
-   ```bash
-   cd server
-   npm run migrate  # or yarn migrate
-   ```
-
-### 6. Starting the Development Environment
+### 4. Starting the Development Environment
 
 ```bash
-# Start the backend server (if applicable)
-cd server
-npm run dev  # or yarn dev
-
-# In a new terminal, start the Flutter app
-cd mobile
+# Run the app in debug mode
 flutter run
 ```
 
-### 7. Running on Devices/Emulators
+This will launch the app on your connected device or emulator.
+
+### 5. Running on Devices/Emulators
 
 #### Android Emulator
 
@@ -164,13 +106,28 @@ flutter run
 
 ## Development Workflow
 
+### Project Structure
+
+Readily Reads follows a simple structure with individual Dart files for each main screen:
+
+- `main.dart` - Application entry point and home screen
+- `splash_screen.dart` - Initial loading screen
+- `login_page.dart` - User authentication
+- `add_book_page.dart` - Form to add new books
+- `book_list_page.dart` - Simple list view of books
+- `book_management_page.dart` - Advanced book management with filtering
+- `currently_reading_page.dart` - Books marked as currently reading
+- `edit_book_page.dart` - Form to edit existing books
+- `book_model.dart` - Book data model and database operations
+- `user_model.dart` - User data model and authentication
+- `user_session.dart` - Session management with shared preferences
+
 ### Code Quality
 
 1. **Linting**:
 
    ```bash
    # Run Flutter linting
-   cd mobile
    flutter analyze
    ```
 
@@ -178,7 +135,6 @@ flutter run
 
    ```bash
    # Format Dart code
-   cd mobile
    flutter format lib/
    ```
 
@@ -186,12 +142,7 @@ flutter run
 
    ```bash
    # Run Flutter tests
-   cd mobile
    flutter test
-
-   # Run backend tests (if applicable)
-   cd server
-   npm test  # or yarn test
    ```
 
 ### Git Workflow
@@ -227,7 +178,7 @@ flutter run
    keytool -genkey -v -keystore ~/upload-keystore.jks -keyalg RSA -keysize 2048 -validity 10000 -alias upload
    ```
 
-2. Create `mobile/android/key.properties` file:
+2. Create `android/key.properties` file:
 
    ```plaintext
    storePassword=<password from previous step>
@@ -236,7 +187,7 @@ flutter run
    storeFile=<location of the key store file, such as ~/upload-keystore.jks>
    ```
 
-3. Update `mobile/android/app/build.gradle` to use the keystore for signing
+3. Update `android/app/build.gradle` to use the keystore for signing (refer to Flutter documentation for specifics)
 
 4. Build the APK or App Bundle:
 
@@ -253,7 +204,7 @@ flutter run
 1. Open the project in Xcode:
 
    ```bash
-   cd mobile/ios
+   cd ios
    open Runner.xcworkspace
    ```
 
@@ -277,6 +228,6 @@ If you encounter issues during setup, please refer to the [Troubleshooting Guide
 
 ## Next Steps
 
-- Review the [API Documentation](./api-documentation.md) to understand the available endpoints (if applicable)
-- Check out the [Contributing Guidelines](./contributing.md) to learn how to contribute to the project
-- Explore the Flutter app code to familiarize yourself with the application structure
+- Review the code to understand the application structure
+- Try adding a new feature or fixing a bug
+- Refer to the [Contributing Guidelines](./contributing.md) to learn how to contribute to the project
