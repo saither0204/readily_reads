@@ -19,6 +19,60 @@ This is the Django REST Framework backend for the Readily Reads book tracking ap
 - **JWT Authentication**: Secure token-based authentication
 - **Swagger/ReDoc**: API documentation
 
+## Directory Structure
+
+The project directory structure is organized as follows:
+
+```plaintext
+readily_reads_api/                  # Root project directory
+├── manage.py                       # Django management script
+├── requirements.txt                # Project dependencies
+├── Dockerfile                      # Docker configuration
+├── .env.example                    # Environment variables template
+├── README.md                       # Project documentation
+│
+├── readily_reads/                  # Main project package
+│   ├── __init__.py                 # Package marker
+│   ├── asgi.py                     # ASGI configuration 
+│   ├── settings.py                 # Project settings
+│   ├── urls.py                     # Main URL configuration
+│   └── wsgi.py                     # WSGI configuration
+│
+├── authentication/                 # Authentication app
+│   ├── __init__.py                 # Package marker
+│   ├── admin.py                    # Admin configuration
+│   ├── apps.py                     # App configuration
+│   ├── migrations/                 # Database migrations
+│   │   └── __init__.py
+│   ├── models.py                   # UserProfile model
+│   ├── serializers.py              # User serializers
+│   ├── signals.py                  # User signals
+│   ├── tests.py                    # Authentication tests
+│   ├── urls.py                     # Authentication URLs
+│   └── views.py                    # Authentication views
+│
+├── books/                          # Books app
+│   ├── __init__.py                 # Package marker  
+│   ├── admin.py                    # Admin configuration
+│   ├── apps.py                     # App configuration
+│   ├── migrations/                 # Database migrations
+│   │   └── __init__.py
+│   ├── models.py                   # Book and ReadingProgress models
+│   ├── permissions.py              # Custom permissions
+│   ├── serializers.py              # Book serializers
+│   ├── tests.py                    # Book tests
+│   ├── urls.py                     # Book URLs
+│   └── views.py                    # Book views
+│
+├── health_check/                   # Health check app
+│   ├── __init__.py                 # Package marker
+│   ├── urls.py                     # Health check URLs
+│   └── views.py                    # Health check view
+│
+├── staticfiles/                    # Collected static files (created by collectstatic)
+└── media/                          # User uploaded files (created at runtime)
+```
+
 ## Setup
 
 ### Prerequisites
