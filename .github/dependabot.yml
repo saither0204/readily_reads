@@ -9,3 +9,9 @@ updates:
     directory: "/readily_reads" # Location of package manifests
     schedule:
       interval: "monthly"
+
+updates:
+  - package-ecosystem: "pip"
+    directory: "/server"
+    schedule:
+      interval: "daily"
