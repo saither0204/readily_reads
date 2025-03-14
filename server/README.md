@@ -1,175 +1,144 @@
-# [Your Mobile App Name] - Backend
+# Readily Reads API
 
-## Overview
+This is the Django REST Framework backend for the Readily Reads book tracking application. It provides user authentication, book management, and reading progress tracking.
 
-This directory contains the backend code for [Your Mobile App Name]. This backend provides API services and data management for the Flutter mobile application.
+## Features
 
-## Directory Structure
+- **User Authentication**: Secure registration and login with JWT tokens
+- **Book Management**: Add, list, update, and delete books
+- **Reading Status**: Track which books you're currently reading
+- **Reading Progress**: Track your progress through each book
+- **Admin Interface**: Built-in admin panel for easy data management
+- **API Documentation**: Swagger/OpenAPI documentation
 
-```plaintext
-server/
-├── config/              # Configuration files
-│   ├── database.js      # Database configuration
-│   ├── auth.js          # Authentication configuration
-│   └── app.js           # Application configuration
-├── controllers/         # Request handlers
-│   ├── auth.controller.js    # Authentication controllers
-│   └── [resource].controller.js  # Resource-specific controllers
-├── middleware/          # Custom middleware
-│   ├── auth.middleware.js    # Authentication middleware
-│   ├── error.middleware.js   # Error handling middleware
-│   └── validation.middleware.js  # Request validation middleware
-├── models/              # Database models
-│   └── [resource].model.js   # Resource-specific models
-├── routes/              # API routes
-│   ├── auth.routes.js        # Authentication routes
-│   ├── index.js              # Route aggregator
-│   └── [resource].routes.js  # Resource-specific routes
-├── services/            # Business logic
-│   ├── auth.service.js       # Authentication services
-│   └── [resource].service.js # Resource-specific services
-├── utils/               # Utility functions
-│   ├── logger.js             # Logging utility
-│   ├── errorHandler.js       # Error handling utility
-│   └── validation.js         # Validation utility
-├── tests/               # Test files
-│   ├── unit/                 # Unit tests
-│   ├── integration/          # Integration tests
-│   └── fixtures/             # Test fixtures
-├── app.js               # Express app
-├── server.js            # Entry point
-├── package.json         # Backend dependencies
-└── README.md            # This file
-```
+## Tech Stack
 
-**Note**: If you're using Firebase or another Backend-as-a-Service provider instead of a custom backend, modify this structure accordingly.
+- **Django**: Web framework
+- **Django REST Framework**: API toolkit
+- **PostgreSQL**: Database (configurable)
+- **JWT Authentication**: Secure token-based authentication
+- **Swagger/ReDoc**: API documentation
 
-## Setup and Installation
+## Setup
 
 ### Prerequisites
 
-- Node.js (version: [specify version])
-- [Database system, e.g., MongoDB, PostgreSQL]
-- [Any other dependencies or tools]
+- Python 3.9+
+- pip (Python package manager)
+- Virtual environment (recommended)
 
 ### Installation
 
+1. Clone the repository:
+
+   ```bash
+   git clone <repository-url>
+   cd readily-reads-api
+   ```
+
+2. Create and activate a virtual environment:
+
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   ```
+
+3. Install dependencies:
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. Set up environment variables:
+
+   ```bash
+   cp .env.example .env
+   # Edit .env with your settings
+   ```
+
+5. Run migrations:
+
+   ```bash
+   python manage.py migrate
+   ```
+
+6. Create a superuser for the admin interface:
+
+   ```bash
+   python manage.py createsuperuser
+   ```
+
+7. Start the development server:
+
+   ```bash
+   python manage.py runserver
+   ```
+
+The API will be available at <http://localhost:8000/> and the admin interface at <http://localhost:8000/admin/>.
+
+## API Documentation
+
+Interactive API documentation is available at:
+
+- **Swagger UI**: `/api/docs/`
+- **ReDoc**: `/api/redoc/`
+
+### Main Endpoints
+
+#### Authentication
+
+- **Register**: `POST /api/auth/register/`
+- **Login**: `POST /api/auth/login/`
+- **Refresh Token**: `POST /api/auth/token/refresh/`
+- **User Profile**: `GET /api/auth/me/`
+
+#### Books
+
+- **List Books**: `GET /api/books/`
+- **Create Book**: `POST /api/books/`
+- **Get Book**: `GET /api/books/{id}/`
+- **Update Book**: `PUT/PATCH /api/books/{id}/`
+- **Delete Book**: `DELETE /api/books/{id}/`
+- **Currently Reading**: `GET /api/books/currently-reading/`
+- **Genres**: `GET /api/books/genres/`
+- **Toggle Reading Status**: `PATCH /api/books/{id}/toggle-reading/`
+
+#### Reading Progress
+
+- **Get/Update Progress**: `GET/PUT/PATCH /api/books/{book_id}/progress/`
+
+## Testing
+
+Run the automated tests with:
+
 ```bash
-# Navigate to the server directory
-cd server
-
-# Install dependencies
-npm install  # or yarn install
+python manage.py test
 ```
 
-### Environment Setup
+## Deployment
 
-1. Create a `.env` file in the server directory
-2. Add the following environment variables:
+### Using Docker
 
-```plaintext
-# Server Configuration
-PORT=[your port number]
-NODE_ENV=[development/production]
+1. Build the Docker image:
 
-# Database Configuration
-DB_URI=[your database connection string]
+   ```bash
+   docker build -t readily-reads-api .
+   ```
 
-# Authentication
-JWT_SECRET=[your JWT secret]
-JWT_EXPIRY=[token expiry time]
+2. Run the container:
 
-# Mobile App
-MOBILE_APP_BUNDLE_ID=[your app bundle ID]
+   ```bash
+   docker run -p 8000:8000 -e SECRET_KEY=your-secret-key -e DEBUG=False readily-reads-api
+   ```
 
-# Push Notifications (if applicable)
-FCM_SERVER_KEY=[Firebase Cloud Messaging server key]
+## Integration with Mobile App
 
-# [Any other configuration variables]
-```
+To use this API with the Readily Reads Flutter mobile app, you'll need to:
 
-## Available Scripts
+1. Update the Flutter app's service classes to make HTTP requests to this API
+2. Implement JWT token storage and management in the mobile app
+3. Update the UI to handle loading states and errors
 
-### Development Server
+## License
 
-```bash
-npm run dev  # or yarn dev
-```
-
-### Starting Production Server
-
-```bash
-npm start  # or yarn start
-```
-
-### Running Tests
-
-```bash
-npm test  # or yarn test
-```
-
-### Linting
-
-```bash
-npm run lint  # or yarn lint
-```
-
-## Database Setup
-
-### [Database Name] Setup
-
-1. [Instructions for setting up the database]
-2. [Instructions for running migrations, if applicable]
-3. [Instructions for seeding the database, if applicable]
-
-## API Architecture
-
-### RESTful Design
-
-- [Describe your RESTful design principles]
-- [Explain the resource naming conventions]
-- [Provide guidelines for designing endpoints]
-
-### Error Handling
-
-- [Describe your error handling approach]
-- [Explain the error response format]
-- [Provide guidelines for handling different types of errors]
-
-### Authentication and Authorization
-
-- [Describe your authentication approach]
-- [Explain the authorization mechanisms]
-- [Provide guidelines for securing endpoints]
-
-## Mobile-Specific Considerations
-
-### Push Notifications
-
-- [Describe how push notifications are implemented]
-- [Explain the notification payload structure]
-- [Provide examples of sending notifications]
-
-### Data Synchronization
-
-- [Describe your approach to data synchronization]
-- [Explain offline-first strategies, if applicable]
-- [Provide guidelines for handling device-specific data]
-
-### API Versioning
-
-- [Describe your API versioning strategy]
-- [Explain how to handle breaking changes]
-- [Provide guidelines for deprecating endpoints]
-
-## Testing Strategy
-
-- [Describe your testing approach]
-- [Explain the organization of test files]
-- [Provide guidelines for writing tests]
-
-## Logging and Monitoring
-
-- [Describe your logging approach]
-- [Explain the monitoring mechanisms]
-- [Provide guidelines for effective logging]
+This project is licensed under the MIT License - see the LICENSE file for details.
