@@ -1,5 +1,7 @@
 # Readily Reads
 
+[![Open Source Helpers](https://www.codetriage.com/saither0204/readily_reads/badges/users.svg)](https://www.codetriage.com/saither0204/readily_reads)
+
 ## Overview
 
 Book reading tracking app that allows users to keep track of their reading progress, set reading goals, and discover new books. The app will have a user-friendly interface and will be available on both Android and iOS platforms. The app will also have a backend server to store user data and book information. The app will be built using the Flutter framework and Dart programming language. The backend server will be built using [Backend Technology](Working on it) and will provide RESTful APIs for the mobile app.
