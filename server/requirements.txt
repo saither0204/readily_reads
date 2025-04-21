@@ -6,7 +6,7 @@ djangorestframework_simplejwt==5.5.0
 drf-yasg==1.21.10
 gunicorn==23.0.0
 inflection==0.5.1
-packaging==24.2
+packaging==25.0
 pip==25.0.1
 psycopg2-binary==2.9.10
 PyJWT==2.10.1
